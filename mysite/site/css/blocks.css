@@ -41,4 +41,6 @@ div#four {
     /* Center */
     display:table;
     margin:auto;
+    /* Remove Underline */
+    text-decoration: none;
 }
