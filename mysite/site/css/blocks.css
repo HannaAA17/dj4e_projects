@@ -1,0 +1,44 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+div {
+    border-style: solid;
+    border-width: 5px;
+    position: fixed;
+    padding: 5px;
+    margin: 5px;
+    width: 25%;
+}
+
+div#one {
+    border-color: orange;
+    top: 10px;
+    left: 10px;
+}
+
+div#two {
+    border-color: green;
+    top: 10px;
+    right: 10px;
+}
+
+div#three {
+    border-color: yellow;
+    bottom: 10px;
+    left: 10px;
+}
+
+div#four {
+    border-color: blue;
+    bottom: 10px;
+    right: 10px;
+}
+
+#link > a {
+    color: #fefefe;
+    background-color: #354eb1;
+    /* Center */
+    display:table;
+    margin:auto;
+}
