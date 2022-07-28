@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from .models import Question
 
 # def index(request):
-#     return HttpResponse("Hello, world. aff71375 is the polls index.")
+#     return HttpResponse("Hello, world. a8f7663d is the polls index.")
 
 
 # def index(request):
@@ -60,4 +60,4 @@ def vote(request, question_id):
 
 
 def owner(request):
-    return HttpResponse("Hello, world. aff71375 is the polls index.")
+    return HttpResponse("Hello, world. cf685b62 is the polls index.")
