@@ -43,4 +43,4 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
 def owner(request):
-    return HttpResponse("Hello, world. cf685b62 is the polls index.")
+    return HttpResponse("Hello, world. 3cb7e8f6 is the polls index.")
