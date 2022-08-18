@@ -41,6 +41,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('polls/', include('polls.urls')),
     path('hello/', include('hello.urls')),
+    path('autos/', include('autos.urls')),
+    
+    # Django built in login features
+    path('accounts/', include('django.contrib.auth.urls')),
     
     # static
     url(
