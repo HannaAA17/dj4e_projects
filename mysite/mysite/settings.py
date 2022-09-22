@@ -111,10 +111,10 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'drchuck$ads',
-#         'USER': 'drchuck',
+#         'NAME': 'pann0350$adss',
+#         'USER': 'pann0350',
 #         'PASSWORD': 'phone_8675309',
-#         'HOST': 'drchuck.mysql.pythonanywhere-services.com',
+#         'HOST': 'pann0350.mysql.pythonanywhere-services.com',
 #          'OPTIONS': {
 #             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
 #         },
