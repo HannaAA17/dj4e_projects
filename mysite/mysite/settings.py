@@ -49,7 +49,7 @@ INSTALLED_APPS = [
 
     # Applications =================
     'ads.apps.AdsConfig',
-    # 'home.apps.HomeConfig',
+    'home.apps.HomeConfig',
     # 'polls.apps.PollsConfig',
     # 'hello.apps.HelloConfig',
     # 'autos.apps.AutosConfig',
