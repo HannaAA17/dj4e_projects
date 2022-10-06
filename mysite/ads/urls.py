@@ -8,6 +8,7 @@ urlpatterns = [
         views.AdListView.as_view(),
         name='all'
     ),
+    
     path('ad/<int:pk>',
         views.AdDetailView.as_view(),
         name='ad_detail'
@@ -26,5 +27,10 @@ urlpatterns = [
     path('ad/<int:pk>/delete',
         views.AdDeleteView.as_view(success_url=reverse_lazy('ads:all')),
         name='ad_delete'
+    ),
+    
+    path('ad_picture/<int:pk>',
+        views.stream_file, 
+        name='ad_picture'
     ),
 ]
