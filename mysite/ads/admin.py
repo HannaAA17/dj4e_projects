@@ -1,5 +1,5 @@
 from django.contrib import admin
-from ads.models import Ad, Comment
+from ads.models import Ad, Comment, Fav
 # Register your models here.
 
 # Define the PicAdmin class
@@ -8,3 +8,4 @@ class AdAdmin(admin.ModelAdmin):
 
 admin.site.register(Ad, AdAdmin)
 admin.site.register(Comment)
+admin.site.register(Fav)
