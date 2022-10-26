@@ -29,14 +29,10 @@ class AdListView(ListView):
         
         else:
             search = search.strip()
-            # Simple title-only search
-            # objects = Post.objects.filter(title__contains=strval).select_related().order_by('-updated_at')[:10]
-
-            # Multi-field search
             # __icontains for case-insensitive search
             qs_filter = Q(title__icontains=search) | Q(text__icontains=search) | Q(tags__name__in=[search])
-            # return self.model.objects.filter(qs_filter).select_related().order_by('-updated_at')[:10]
-            return self.model.objects.filter(qs_filter).select_related()[:10]
+            # select_related => extract the related objects ad.tags.all
+            return self.model.objects.filter(qs_filter).distinct().select_related()[:10]
        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
