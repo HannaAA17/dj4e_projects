@@ -12,21 +12,45 @@ from django.db.utils import IntegrityError
 from ads.models import Ad, Comment, Fav
 from ads.forms import CreateForm, CommentForm
 
+from django.db.models import Q
+
 class AdListView(ListView):
     model = Ad
     # By convention:
-    # template_name = "ads/ad_list.html"
+    # template_name = 'ads/ad_list.html'
+    
+    def get_queryset(self):
+        search = self.request.GET.get('search', False)
+        
+        if not search:
+            # return super().get_queryset()
+            # return self.model.objects.order_by('-updated_at')[:10]
+            return self.model.objects.all()[:10]
+        
+        else:
+            # Simple title-only search
+            # objects = Post.objects.filter(title__contains=strval).select_related().order_by('-updated_at')[:10]
+
+            # Multi-field search
+            # __icontains for case-insensitive search
+            qs_filter = Q(title__icontains=search) | Q(text__icontains=search)
+            # return self.model.objects.filter(qs_filter).select_related().order_by('-updated_at')[:10]
+            return self.model.objects.filter(qs_filter).select_related()[:10]
+    
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
         if self.request.user.is_authenticated:
-            # rows = [{'id': 2}, {'id': 4} ... ]  (A list of rows)
             rows = self.request.user.favorite_ads.values('id')
+            # rows = [{'id': 2}, {'id': 4} ... ]  (A list of rows)
             context['favorites'] = [ row['id'] for row in rows ]
+        
         else:
             context['favorites'] = []
-            
+        
+        context['search'] = self.request.GET.get('search', False)
+        
         return context
 
 
@@ -113,7 +137,7 @@ class CommentCreateView(LoginRequiredMixin, View):
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
     model = Comment
-    # template_name = "ads/comment_delete.html"
+    # template_name = 'ads/comment_delete.html'
     
     def get_queryset(self):
         print('delete get_queryset called')
@@ -131,7 +155,7 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 @method_decorator(csrf_exempt, name='dispatch')
 class AddFavoriteView(LoginRequiredMixin, View):
     def post(self, request, pk) :
-        print("Add PK", pk)
+        print('Add PK', pk)
         t = get_object_or_404(Ad, id=pk)
         fav = Fav(ad=t, user=request.user)
         try:
@@ -143,7 +167,7 @@ class AddFavoriteView(LoginRequiredMixin, View):
 @method_decorator(csrf_exempt, name='dispatch')
 class DeleteFavoriteView(LoginRequiredMixin, View):
     def post(self, request, pk) :
-        print("Delete PK", pk)
+        print('Delete PK', pk)
         t = get_object_or_404(Ad, id=pk)
         try:
             fav = Fav.objects.get(ad=t, user=request.user).delete()
