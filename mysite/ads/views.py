@@ -28,16 +28,16 @@ class AdListView(ListView):
             return self.model.objects.all()[:10]
         
         else:
+            search = search.strip()
             # Simple title-only search
             # objects = Post.objects.filter(title__contains=strval).select_related().order_by('-updated_at')[:10]
 
             # Multi-field search
             # __icontains for case-insensitive search
-            qs_filter = Q(title__icontains=search) | Q(text__icontains=search)
+            qs_filter = Q(title__icontains=search) | Q(text__icontains=search) | Q(tags__name__in=[search])
             # return self.model.objects.filter(qs_filter).select_related().order_by('-updated_at')[:10]
             return self.model.objects.filter(qs_filter).select_related()[:10]
-    
-    
+       
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
@@ -66,6 +66,7 @@ class AdDetailView(View):
         }
         return render(request, self.template_name, context)
 
+
 class AdCreateView(LoginRequiredMixin, View):
     template_name = 'ads/ad_form.html'
     success_url = reverse_lazy('ads:all')
@@ -87,7 +88,11 @@ class AdCreateView(LoginRequiredMixin, View):
         ad.owner = self.request.user
         ad.save()
         
+        # save tags
+        form.save_m2m()
+        
         return redirect(self.success_url)
+
 
 def stream_file(request, pk):
     ad = get_object_or_404(Ad, id=pk)
@@ -96,6 +101,7 @@ def stream_file(request, pk):
     response['Content-Length'] = len(ad.picture)
     response.write(ad.picture)
     return response
+
 
 class AdUpdateView(LoginRequiredMixin, View):
     template_name = 'ads/ad_form.html'
@@ -117,8 +123,12 @@ class AdUpdateView(LoginRequiredMixin, View):
 
         ad = form.save(commit=False)
         ad.save()
-
+        
+        # save tags
+        form.save_m2m()
+        
         return redirect(self.success_url)
+
 
 class AdDeleteView(LoginRequiredMixin, DeleteView):
     model = Ad
@@ -128,12 +138,14 @@ class AdDeleteView(LoginRequiredMixin, DeleteView):
         qs = super(DeleteView, self).get_queryset()
         return qs.filter(owner=self.request.user)
 
+
 class CommentCreateView(LoginRequiredMixin, View):
     def post(self, request, pk) :
         f = get_object_or_404(Ad, id=pk)
         comment = Comment(text=request.POST['comment'], owner=request.user, ad=f)
         comment.save()
         return redirect(reverse('ads:ad_detail', args=[pk]))
+
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
     model = Comment
@@ -163,6 +175,7 @@ class AddFavoriteView(LoginRequiredMixin, View):
         except IntegrityError as e:
             pass
         return HttpResponse()
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DeleteFavoriteView(LoginRequiredMixin, View):

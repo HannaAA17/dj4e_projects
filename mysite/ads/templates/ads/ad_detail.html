@@ -42,6 +42,16 @@
     {{ ad.text }}
   </p>
 
+  {% with tags=ad.tags.all %} 
+    {% if tags %}
+      <p>Tags: 
+        {% for tag in tags %}
+          <span style="border:1px grey solid; background-color: LightGreen;">{{ tag }}</span>
+        {% endfor %}
+      </p>
+    {% endif %}
+  {% endwith %}
+  
   <p>
     ({{ ad.updated_at|naturaltime }})
   </p>

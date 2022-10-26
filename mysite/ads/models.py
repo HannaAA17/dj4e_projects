@@ -2,7 +2,10 @@ from django.db import models
 from django.core.validators import MinLengthValidator
 from django.conf import settings
 
-class Ad(models.Model) :
+from taggit.managers import TaggableManager
+
+
+class Ad(models.Model):
 
     title = models.CharField(
         max_length=200,
@@ -19,11 +22,14 @@ class Ad(models.Model) :
     picture = models.BinaryField(null=True, editable=True)
     content_type = models.CharField(max_length=256, null=True, help_text='The MIMEType of the file')
     
-    # comments
+    # Comments
     comments = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Comment', related_name='comments_owned')
     
     # Favorites
     favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Fav', related_name='favorite_ads')
+    
+    # Tags
+    tags = TaggableManager(blank=True)
     
     # hidden
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -38,7 +44,7 @@ class Ad(models.Model) :
         return self.title
 
 
-class Comment(models.Model) :
+class Comment(models.Model):
     
     text = models.TextField(
         validators=[
@@ -57,7 +63,7 @@ class Comment(models.Model) :
         if len(self.text) < 15 : return self.text
         return self.text[:11] + ' ...'
 
-class Fav(models.Model) :
+class Fav(models.Model):
     ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
